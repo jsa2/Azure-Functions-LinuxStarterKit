@@ -4,7 +4,7 @@
 ## Major update
 - Uses managed Identity instead connection string for [``AzureWebJobsStorage``](https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#azurewebjobsstorage)
   - Finding the correct settings was bit harder than I anticipated. Bunch of helpful resources were added to the end regarding 
-  - Some discussions raise the lack of MSI support for the scaling storage account (scaling plans) [``WEBSITE_CONTENTAZUREFILECONNECTIONSTRING``](https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#website_contentazurefileconnectionstring) but this storage account does not store any secrets, and this function stores it's code in the storage that is only accessable via 
+  - Some discussions raise the lack of MSI support for the scaling storage account (scaling plans) [``WEBSITE_CONTENTAZUREFILECONNECTIONSTRING``](https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#website_contentazurefileconnectionstring) but this storage account does not store Functions keys like ``AzureWebJobsStorage`` in
 - Sets up the Azure RBAC for storage based on supporting multiple function types (timer,trigger etc)
 - Enables logging for Function related storage accounts and the function itself (this is to monitor security events)
 
@@ -140,7 +140,6 @@ roleDefId="/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753
 
 # Deploy using bicep templates
 outputData=$(az deployment group create --resource-group $rg --template-file fn.bicep --parameters roleDefinitionResourceId=$roleDefId rand=$rnd appName=$fnName storageAccountName=$storageAcc logAnalyticsWorkspaceName=$laws packageUri=$src)
-az deployment group create --resource-group $rg --template-file appLogs.bicep --parameters logAnalyticsWorkspaceName=$laws functionAppName=$fnName
 
 # Extract storage account details
 saId2=$(echo $outputData  | jq .properties.outputResources[6].id -r)
@@ -170,6 +169,7 @@ az group delete \
 
 ## resources
 
+I draw some examples and inspiration from the following sources 
 
 https://learn.microsoft.com/en-us/azure/azure-functions/functions-identity-based-connections-tutorial#use-managed-identity-for-azurewebjobsstorage
 
@@ -187,10 +187,11 @@ https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings
 
 https://github.com/Azure/bicep/discussions/8435#discussioncomment-3694406  
 
+https://blog.vincentboots.nl/secure-azurewebjobstorage-in-azure-functions-647e56d32727
 
 
 ## License
-Copyright 2021 Joosua Santasalo
+Copyright 2023 Joosua Santasalo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

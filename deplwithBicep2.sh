@@ -14,7 +14,7 @@ rg=RG-FN-$fnName
 location=westeurope
 IPRestriction=$(curl -s ifconfig.me)
 storageAcc=privstorage$rnd
-laws=lawsingestehoney
+laws=honeypotLogs$rnd
 azEnv=honeypot
 me=$(az rest -u https://graph.microsoft.com/v1.0/me | jq .id -r)
 AZURE_STORAGE_AUTH_MODE=login
@@ -49,7 +49,6 @@ roleDefId="/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753
 
 # Deploy using bicep templates
 outputData=$(az deployment group create --resource-group $rg --template-file fn.bicep --parameters roleDefinitionResourceId=$roleDefId rand=$rnd appName=$fnName storageAccountName=$storageAcc logAnalyticsWorkspaceName=$laws packageUri=$src)
-az deployment group create --resource-group $rg --template-file appLogs.bicep --parameters logAnalyticsWorkspaceName=$laws functionAppName=$fnName
 
 # Extract storage account details
 saId2=$(echo $outputData  | jq .properties.outputResources[6].id -r)
