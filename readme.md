@@ -3,7 +3,7 @@
 
 ## Major update
 - Uses managed Identity instead connection string for [``AzureWebJobsStorage``](https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#azurewebjobsstorage)
-  - Finding the correct settings was bit harder than I anticipated. Bunch of helpful resources were added to the end regarding 
+  - Finding the correct settings was bit harder than I anticipated. Bunch of helpful resources were added to the end regarding this search
   - Some discussions raise the lack of MSI support for the scaling storage account (scaling plans) [``WEBSITE_CONTENTAZUREFILECONNECTIONSTRING``](https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings#website_contentazurefileconnectionstring) but this storage account does not store Functions keys like ``AzureWebJobsStorage`` in
 - Sets up the Azure RBAC for storage based on supporting multiple function types (timer,trigger etc)
 - Enables logging for Function related storage accounts and the function itself (this is to monitor security events)
